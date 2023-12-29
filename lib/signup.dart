@@ -74,7 +74,7 @@ class _SignUpFormState extends State<SignUpForm> {
                                   validator: (input) => !input!.contains('@')
                                       ? 'Please enter a valid email'
                                       : null,
-                                  onSaved: (input) => _email = input,
+                                  onChanged: (input) => _email = input,
                                   decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(

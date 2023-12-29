@@ -39,7 +39,6 @@ class _LoginFormState extends State<LoginForm> {
   Future<User?> login(
       String? email, String? password, BuildContext context) async {
     try {
-      await auth.setSettings(appVerificationDisabledForTesting: true);
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         UserCredential userCred = await auth.signInWithEmailAndPassword(
@@ -50,8 +49,6 @@ class _LoginFormState extends State<LoginForm> {
 
         // Logout as this is debug build and helps in testing
         await auth.signOut();
-      } else {
-        return null;
       }
     } on FirebaseAuthException catch (e) {
       // On error
@@ -68,9 +65,9 @@ class _LoginFormState extends State<LoginForm> {
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          duration: const Duration(minutes: 1),
+          duration: Duration(minutes: 1),
           content: Text(
-              'Something went wrong please try again. Most Likely incorrect credentials. Validation of this error not handled as Google Play Protect not yet enabled (empty reCAPTCHA token). Try using correct credentials.')));
+              'Error: Most Likely incorrect credentials. Validation of this error not handled as Google Play Protect not yet enabled (empty reCAPTCHA token)')));
     }
   }
 
@@ -123,7 +120,7 @@ class _LoginFormState extends State<LoginForm> {
                                   validator: (input) => !input!.contains('@')
                                       ? 'Please enter a valid email'
                                       : null,
-                                  onSaved: (input) => _email = input,
+                                  onChanged: (input) => _email = input,
                                   decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
@@ -168,7 +165,7 @@ class _LoginFormState extends State<LoginForm> {
                                   validator: (input) => input!.length < 6
                                       ? 'Must be at least 6 characters'
                                       : null,
-                                  onSaved: (input) => _password = input,
+                                  onChanged: (input) => _password = input,
                                   obscureText: _isHidden,
                                   decoration: InputDecoration(
                                     enabledBorder: OutlineInputBorder(
