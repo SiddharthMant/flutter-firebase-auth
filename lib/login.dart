@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_auth_final/dashboard.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -17,6 +18,13 @@ class _LoginFormState extends State<LoginForm> {
 
   final Future<FirebaseApp> firebaseInitialization = Firebase.initializeApp();
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  gotoDashboard(BuildContext context) {
+    if (auth.currentUser != null) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => Dashboard()));
+    }
+  }
 
   passwordReset(String? email, BuildContext context) async {
     // Better to handle reset password in seperate screen ?
@@ -47,8 +55,7 @@ class _LoginFormState extends State<LoginForm> {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Logged In.')));
 
-        // Logout as this is debug build and helps in testing
-        await auth.signOut();
+        gotoDashboard(context);
       }
     } on FirebaseAuthException catch (e) {
       // On error

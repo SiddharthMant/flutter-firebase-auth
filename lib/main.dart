@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_auth_final/dashboard.dart';
 import './signup.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -10,5 +12,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(SignUpForm());
+  FirebaseAuth auth = FirebaseAuth.instance;
+  if (auth.currentUser != null) {
+    runApp(Dashboard());
+  } else {
+    runApp(SignUpForm());
+  }
 }

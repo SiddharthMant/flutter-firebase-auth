@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_auth_final/dashboard.dart';
 import 'package:flutter_auth_final/login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -21,6 +22,13 @@ class _SignUpFormState extends State<SignUpForm> {
 
   final Future<FirebaseApp> firebaseInitialization = Firebase.initializeApp();
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  gotoDashboard(BuildContext context) {
+    if (auth.currentUser != null) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => Dashboard()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,8 +235,8 @@ class _SignUpFormState extends State<SignUpForm> {
                                           userEmail: _email,
                                           password: _confirmpassword,
                                           context: context);
-                                      // Logout as this is debug build and helps in testing
-                                      await auth.signOut();
+                                      // Goto Dashboard
+                                      gotoDashboard(context);
                                     },
                                     child: Text("SIGN UP"),
                                   )),
@@ -279,8 +287,8 @@ class _SignUpFormState extends State<SignUpForm> {
                                                 onTap: () async {
                                                   await signInWithGoogle(
                                                       context: context);
-                                                  // Logout as this is debug build and helps in testing
-                                                  await auth.signOut();
+                                                  // Goto Dashboard
+                                                  gotoDashboard(context);
                                                 },
                                                 child: Ink.image(
                                                     width: 50,
@@ -293,8 +301,8 @@ class _SignUpFormState extends State<SignUpForm> {
                                                 onTap: () async {
                                                   await signInWithFacebook(
                                                       context: context);
-                                                  // Logout as this is debug build and helps in testing
-                                                  await auth.signOut();
+                                                  // Goto Dashboard
+                                                  gotoDashboard(context);
                                                 },
                                                 child: Ink.image(
                                                     width: 48,
@@ -331,11 +339,13 @@ class _SignUpFormState extends State<SignUpForm> {
                                       Text("Already have an account? "),
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) => LoginForm(),
-                                            ),
-                                          );
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginForm(),
+                                                  ),
+                                                  (route) => false);
                                         },
                                         style: TextButton.styleFrom(
                                           foregroundColor:
